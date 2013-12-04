@@ -1,6 +1,15 @@
 REPORTER = spec
 TESTFILES = $(shell find test/ -name '*.test.js')
 
+startserver:
+	@echo Starting test server...
+	@NODE_ENV=test node test/socket.server.js &
+	@sleep 1
+
+stopserver:
+	@echo Stopping test server.
+	@pkill -f "node test/socket.server.js"
+
 install:
 	@echo "Installing production"
 	@npm install --production
@@ -9,10 +18,12 @@ install:
 build: lint
 	@NODE_ENV=test mocha --reporter dot $(TESTFILES)
 
-test:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
+runtests:
+	-@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		$(TESTFILES)
+
+test: startserver runtests stopserver
 
 lint:
 	@echo "Linting..."
@@ -22,7 +33,7 @@ lint:
 
 coverage:
 	@echo "Generating coverage report.."
-	@istanbul cover _mocha
+	@NODE_ENV=test istanbul cover _mocha -- -R spec
 	@echo "Done: ./coverage/lcov-report/index.html"
 
-.PHONY: install lint test coverage
+.PHONY: install lint runtests test coverage startserver stopserver
