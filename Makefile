@@ -22,10 +22,7 @@ lint:
 
 coverage:
 	@echo "Generating coverage report.."
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--require blanket \
-		$(TESTFILES) \
-		--reporter html-cov > coverage.html
-	@echo "Done: ./coverage.html"
+	@istanbul cover _mocha
+	@echo "Done: ./coverage/lcov-report/index.html"
 
 .PHONY: install lint test coverage
