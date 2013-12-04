@@ -1,6 +1,6 @@
 
 /**
- *
+ * Dependencies
  */
 
 var expect = require('expect.js')
