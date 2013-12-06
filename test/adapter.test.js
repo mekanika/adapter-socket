@@ -37,8 +37,8 @@ describe('Adapter', function () {
       });
     });
 
-    it('.socketio defaults are empty', function () {
-      expect( socket.config.socketio ).to.be.empty();
+    it('.socket defaults are empty', function () {
+      expect( socket.config.socket ).to.be.empty();
     });
 
   });
