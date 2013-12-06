@@ -14,12 +14,15 @@
   "bugs": {
     "url": "https://github.com/mekanika/adapter-socket/issues"
   },
-  "bundledDependencies": ["sockjs-client"],
+  "bundledDependencies": [
+    "sockjs-client"
+  ],
   "dependencies": {
     "mekanika-adapter": "*"
   },
   "devDependencies": {
     "mocha": "~1.15.1",
+    "chai": "~1.8.1",
     "expect.js": "~0.2.0",
     "jshint": "~2.3.0",
     "sockjs": "~0.3.8"

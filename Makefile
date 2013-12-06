@@ -15,14 +15,19 @@ install:
 	@echo "Install complete"
 
 build: lint
-	@NODE_ENV=test mocha --reporter dot $(TESTFILES)
+	@browserify lib/adapter-socket.js -o adapter-socket.js -s socket
 
-runtests:
+buildandtest: build test
+
+unit-tests:
 	-@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		$(TESTFILES)
 
-test: startserver runtests stopserver
+integration-tests:
+	-@NODE_ENV=test mocha-phantomjs test/harness.html
+
+test: unit-tests startserver integration-tests stopserver
 
 lint:
 	@echo "Linting..."
@@ -35,4 +40,4 @@ coverage:
 	@NODE_ENV=test istanbul cover _mocha -- -R spec
 	@echo "Done: ./coverage/lcov-report/index.html"
 
-.PHONY: install lint runtests test coverage startserver stopserver
+.PHONY: install lint test coverage startserver stopserver
