@@ -14,9 +14,9 @@
   "bugs": {
     "url": "https://github.com/mekanika/adapter-socket/issues"
   },
+  "bundledDependencies": ["sockjs-client"],
   "dependencies": {
-    "mekanika-adapter": "*",
-    "sockjs-client": "git+https://github.com/sockjs/sockjs-client.git"
+    "mekanika-adapter": "*"
   },
   "devDependencies": {
     "mocha": "~1.15.1",
