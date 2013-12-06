@@ -58,8 +58,49 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
 
     });
 
-    it('returns the adapter', function () {
-      expect( socket.connect() ).to.equal( socket );
+    it('returns the adapter', function (done) {
+      expect( socket.connect( done ) ).to.equal( socket );
+    });
+
+  });
+
+
+  describe('.disconnect( cb )', function () {
+
+    it('disconnects the socket connection', function ( done ) {
+      socket.connect( function (err, res) {
+        expect( err ).to.not.exist;
+        var sk = res;
+        sk.onclose = function() {
+          done();
+        }
+        socket.disconnect();
+      });
+    });
+
+    it('runs the callback(err, socket) if provided', function ( done ) {
+      socket.connect( function (err, res) {
+        expect( err ).to.not.exist;
+        socket.disconnect( function (err, res) {
+          expect( res.readyState ).to.eql( 3 );
+          done();
+        });
+      });
+    });
+
+    it('runs callback even when already disconnected', function ( done ) {
+      socket.connect( function (err, res) {
+        socket.disconnect( function(err,res) {
+          socket.disconnect( function( err, res ) {
+            expect( err ).to.not.exist;
+            expect( res.readyState ).to.eql( 3 );
+            done();
+          });
+        });
+      });
+    });
+
+  });
     });
 
   });
