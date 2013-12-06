@@ -1,5 +1,11 @@
 
 /**
+ * Hack to allow SockJS-client to run tests sans-browser
+ */
+
+global.window = global.document = {attachEvent:function(){}};
+
+/**
  * Dependencies
  */
 
