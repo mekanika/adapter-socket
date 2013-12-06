@@ -1,26 +1,29 @@
 
+var silent = process.argv[2] === 'silent';
+
 /**
  * Dependencies
  */
 
 var http = require('http');
-var io = require('sockjs').createServer();;
+var io = require('sockjs').createServer( {log:function(){}});
 
 /**
  * Socket handler
  */
 
+
 io.on('connection', function ( conn ) {
 
-  console.log('[connected]', conn.id );
+  silent || console.log('[connected]', conn.id );
 
   conn.on('data', function ( message ) {
-    console.log('[data]', message );
+    silent || console.log('[data]', message );
     conn.write( message );
   });
 
   conn.on('close', function () {
-    console.log('[closed]', conn.id );
+    silent || console.log('[closed]', conn.id );
   });
 
 });

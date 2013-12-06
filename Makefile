@@ -3,12 +3,11 @@ TESTFILES = $(shell find test/ -name '*.test.js')
 
 startserver:
 	@echo Starting test server...
-	@NODE_ENV=test node test/socket.server.js &
-	@sleep 1
+	@NODE_ENV=test node test/socket.server.js silent &
 
 stopserver:
 	@echo Stopping test server.
-	@pkill -f "node test/socket.server.js"
+	@pkill -f "node test/socket.server.js silent"
 
 install:
 	@echo "Installing production"
