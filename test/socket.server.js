@@ -6,6 +6,8 @@ var silent = process.argv[2] === 'silent';
  */
 
 var Primus = require('primus')
+  , PrimusResponder = require('primus-responder')
+  , multiplex = require('primus-multiplex')
   , http = require('http');
 
 
@@ -13,6 +15,9 @@ var Primus = require('primus')
 var server = http.createServer()
   , primus = new Primus( server, {transformer: 'sockjs'} );
 
+// Plugins
+primus.use('responder', PrimusResponder);
+primus.use('multiplex', multiplex);
 
 primus.on('connection', function (spark) {
   console.log('connection has the following headers', spark.headers);
@@ -24,6 +29,12 @@ primus.on('connection', function (spark) {
     spark.write({ foo: data });
   });
 
+  // Handle incoming requests:
+  spark.on('request', function(data, done) {
+    console.log('incoming REQUST for response');
+    data.reqtouch = true;
+    // Echo the received request data
+    done(data);
   });
 });
 
