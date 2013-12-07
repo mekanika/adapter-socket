@@ -18,11 +18,9 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
 
     it('creates a new socket firing callback( err, socket )', function ( done ) {
       socket.connect( function (err,res) {
-        if (!err) {
-          expect( res ).to.an.instanceof( SockJS );
-          done();
-        }
-        else throw new Error( err );
+        expect( err ).to.not.exist;
+        expect( res ).to.an.instanceof( SockJS );
+        done();
       });
     });
 
