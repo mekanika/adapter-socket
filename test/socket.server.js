@@ -5,32 +5,29 @@ var silent = process.argv[2] === 'silent';
  * Dependencies
  */
 
-var http = require('http');
-var io = require('sockjs').createServer( {log:function(){}});
+var Primus = require('primus')
+  , http = require('http');
 
-/**
- * Socket handler
- */
-
-
-io.on('connection', function ( conn ) {
-
-  silent || console.log('[connected]', conn.id );
-
-  conn.on('data', function ( message ) {
-    silent || console.log('[data]', message );
-    conn.write( message );
-  });
-
-  conn.on('close', function () {
-    silent || console.log('[closed]', conn.id );
-  });
-
-});
 
 // Boot server
-var server = http.createServer();
-io.installHandlers( server );
+var server = http.createServer()
+  , primus = new Primus( server, {transformer: 'sockjs'} );
 
-// Listen on port 3001
-server.listen(3001, 'localhost');
+
+primus.on('connection', function (spark) {
+  console.log('connection has the following headers', spark.headers);
+  console.log('connection was made from', spark.address);
+  console.log('connection id', spark.id);
+
+  spark.on('data', function (data) {
+    console.log('received data from the client', data);
+    spark.write({ foo: data });
+  });
+
+  });
+});
+
+// Listen on port
+var port = 3001
+console.log('Socket server on '+port);
+server.listen(port, 'localhost');
