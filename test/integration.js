@@ -99,6 +99,36 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
     });
 
   });
+
+
+  describe('.exec( req, cb )', function () {
+
+    it('returns a socket', function (done) {
+      var sock = socket.exec( {action:'find'}, done );
+      // Duck type socket.io Socket
+      expect( sock._server ).to.not.be.empty;
+    });
+
+    it('passes errors to callback', function ( done ) {
+      // Force connection to a dead port
+      socket.config.port = 12267;
+      socket.disconnect( function() {
+
+        socket.exec( {action:'find'}, function (err, res) {
+          expect( err ).to.not.be.empty;
+          done();
+        });
+
+      });
+
+    });
+
+    it('passes success flag to callback once sent', function ( done ) {
+      socket.exec( {action:'find'}, function (err, res) {
+        expect( err ).to.not.exist;
+        expect( res ).to.be.true;
+        done();
+      });
     });
 
   });
