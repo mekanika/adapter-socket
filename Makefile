@@ -14,10 +14,10 @@ install:
 	@npm install --production
 	@echo "Install complete"
 
-build: lint
+build:
 	@browserify lib/adapter-socket.js -o adapter-socket.js -s socket
 
-buildandtest: build test
+buildandtest: lint build test
 
 unit-tests:
 	-@NODE_ENV=test ./node_modules/.bin/mocha \
