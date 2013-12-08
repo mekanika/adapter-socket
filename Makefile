@@ -15,7 +15,9 @@ install:
 	@echo "Install complete"
 
 build:
-	@browserify lib/adapter-socket.js -o adapter-socket.js -s socket
+	@node tools/build-primus.js
+	-@browserify lib/adapter-socket.js -o adapter-socket.js -s socket
+	@rm primus.js
 
 buildandtest: lint build test
 
