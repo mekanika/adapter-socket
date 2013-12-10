@@ -17,19 +17,19 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
   describe('.connect( cb )', function () {
 
     it('creates a new socket firing callback( err, socket )', function ( done ) {
-      socket.connect( function (err,res) {
+      socket.connect( function first(err,res) {
         expect( err ).to.not.exist;
-        expect( res ).to.an.instanceof( SockJS );
+        // Primus instances are EventEmitters
+        expect( res.constructor.name ).to.equal( 'EventEmitter' );
+        expect( res.readyState ).to.equal( 3 );
         done();
       });
     });
 
     it('callsback an error if connect fails (onclose)', function ( done ) {
       socket.config.port = 21121;
-      socket.connect( function( err, res ) {
+      socket.connect( function second( err, res ) {
         expect( err ).to.exist;
-        expect( err.type ).to.equal( 'close' );
-        expect( err.code ).to.equal( 1002 );
         expect( res ).to.not.exist;
         done();
       });
@@ -38,20 +38,23 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
     it('removes the connect error event if no error', function ( done ) {
       socket.connect( function (err, res) {
         expect( err ).to.be.null;
-        expect( res.onclose ).to.be.null;
-        done();
+
+        expect( res.listeners('end') ).to.have.length( 1 );
+        // process.nexTick -- runs the 'remove' event and returns to 0 (primus)
+        setTimeout( function(){
+          expect( res.listeners('end') ).to.have.length( 0 );
+          done();
+        }, 0 );
       });
     });
 
     it('disconnects a connected socket on .connect', function ( done ) {
       socket.connect( function (err, res) {
-        var sid = res._server;
+        res.on( 'end', function() {
+          done()
+        })
 
-        socket.connect( function (err, res) {
-          expect( err ).to.not.exist;
-          expect( res._server ).to.not.eql( sid );
-          done();
-        });
+        socket.connect();
       });
 
     });
