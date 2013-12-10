@@ -5,6 +5,8 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
   // Apply test server config
   beforeEach( function () {
     socket.config.port = 3001;
+    // Ensures 'bad' connections don't constantly retry
+    socket.config.socket = {strategy:['online'], reconnect:{retries:1}};
   });
 
   // Return config to earlier defaults
@@ -63,6 +65,14 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
         socket.connect();
       });
 
+    });
+
+    it('uses adapter.config.socket config as connect options', function () {
+      // Shorthand
+      var cfg = socket.config.socket;
+      var sockOpts = socket.socket.options;
+      // Only need one check (see `beforeEach` for where this is set)
+      expect( sockOpts.reconnect ).to.eql( cfg.reconnect );
     });
 
     it('returns the adapter', function (done) {
