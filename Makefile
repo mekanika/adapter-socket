@@ -14,9 +14,18 @@ install:
 	@npm install --production
 	@echo "Install complete"
 
-build:
+primus:
 	@node tools/build-primus.js
+
+compile:
+	@echo [Compile] Compiling adapter...
 	-@browserify lib/adapter-socket.js -o adapter-socket.js -s socket
+	@echo [Compile] Done
+
+min:
+	@uglifyjs adapter-socket.js -c -m -o adapter-socket.js
+
+build: primus compile
 	@rm primus.js
 
 buildandtest: lint build test
@@ -27,6 +36,7 @@ unit-tests:
 		$(TESTFILES)
 
 integration-tests:
+	@echo Starting PhantomJS...
 	-@NODE_ENV=test mocha-phantomjs test/harness.html
 
 test: unit-tests startserver integration-tests stopserver
