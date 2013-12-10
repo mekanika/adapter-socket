@@ -77,10 +77,9 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
     it('disconnects the socket connection', function ( done ) {
       socket.connect( function (err, res) {
         expect( err ).to.not.exist;
-        var sk = res;
-        sk.onclose = function() {
+        res.once( 'end', function() {
           done();
-        }
+        });
         socket.disconnect();
       });
     });
@@ -89,7 +88,7 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
       socket.connect( function (err, res) {
         expect( err ).to.not.exist;
         socket.disconnect( function (err, res) {
-          expect( res.readyState ).to.eql( 3 );
+          expect( res.readyState ).to.eql( state.CLOSED );
           done();
         });
       });
@@ -100,11 +99,19 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
         socket.disconnect( function(err,res) {
           socket.disconnect( function( err, res ) {
             expect( err ).to.not.exist;
-            expect( res.readyState ).to.eql( 3 );
+            expect( res.readyState ).to.eql( state.CLOSED );
             done();
           });
         });
       });
+    });
+
+    it('runs callback even if no socket ever present', function ( done ) {
+      socket.socket = null;
+      socket.disconnect( function() {
+        expect( arguments ).to.have.length( 2 );
+        done();
+      })
     });
 
   });
