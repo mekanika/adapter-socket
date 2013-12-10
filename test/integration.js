@@ -13,6 +13,12 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
   });
 
 
+  // Map internal Primus readyState
+  var state = {
+    OPENING: 1,
+    CLOSED: 2,
+    OPEN: 3
+  }
 
   describe('.connect( cb )', function () {
 
@@ -21,7 +27,7 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
         expect( err ).to.not.exist;
         // Primus instances are EventEmitters
         expect( res.constructor.name ).to.equal( 'EventEmitter' );
-        expect( res.readyState ).to.equal( 3 );
+        expect( res.readyState ).to.equal( state.OPEN );
         done();
       });
     });
