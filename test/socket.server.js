@@ -39,6 +39,6 @@ primus.on('connection', function (spark) {
 });
 
 // Listen on port
-var port = 3001
+var port = 3001;
 console.log('Socket server on '+port);
 server.listen(port, 'localhost');

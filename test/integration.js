@@ -20,7 +20,7 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
     OPENING: 1,
     CLOSED: 2,
     OPEN: 3
-  }
+  };
 
   describe('.connect( cb )', function () {
 
@@ -59,8 +59,8 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
     it('disconnects a connected socket on .connect', function ( done ) {
       socket.connect( function (err, res) {
         res.on( 'end', function() {
-          done()
-        })
+          done();
+        });
 
         socket.connect();
       });
@@ -121,7 +121,7 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
       socket.disconnect( function() {
         expect( arguments ).to.have.length( 2 );
         done();
-      })
+      });
     });
 
   });
