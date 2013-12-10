@@ -121,8 +121,9 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
 
     it('returns a socket', function (done) {
       var sock = socket.exec( {action:'find'}, done );
-      // Duck type socket.io Socket
-      expect( sock._server ).to.not.be.empty;
+      // Duck type primus Socket
+      expect( sock.constructor.name ).to.equal( 'EventEmitter' );
+      expect( sock.readyState ).to.exist;
     });
 
     it('passes errors to callback', function ( done ) {
@@ -131,7 +132,7 @@ describe('Adapter browser tests (require socket server on 3001)', function () {
       socket.disconnect( function() {
 
         socket.exec( {action:'find'}, function (err, res) {
-          expect( err ).to.not.be.empty;
+          expect( err ).to.exist;
           done();
         });
 
