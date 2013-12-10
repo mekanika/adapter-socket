@@ -20,18 +20,18 @@ primus.use('responder', PrimusResponder);
 primus.use('multiplex', multiplex);
 
 primus.on('connection', function (spark) {
-  console.log('connection has the following headers', spark.headers);
-  console.log('connection was made from', spark.address);
-  console.log('connection id', spark.id);
+  silent || console.log('connection has the following headers', spark.headers);
+  silent || console.log('connection was made from', spark.address);
+  silent || console.log('connection id', spark.id);
 
   spark.on('data', function (data) {
-    console.log('received data from the client', data);
+    silent || console.log('received data from the client', data);
     spark.write({ foo: data });
   });
 
   // Handle incoming requests:
   spark.on('request', function(data, done) {
-    console.log('incoming REQUST for response');
+    silent || console.log('incoming REQUST for response');
     data.reqtouch = true;
     // Echo the received request data
     done(data);
